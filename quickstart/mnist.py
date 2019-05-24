@@ -34,13 +34,14 @@ model = tf.keras.models.Sequential([
   tf.keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.sparse_categorical_crossentropy,
+model.compile(optimizer=tf.keras.optimizers.Adam(),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(),
               metrics=['accuracy'])
 
-# Train and evaluate model:
-model.fit(x_train, y_train, epochs=10)
-model.evaluate(x_test, y_test)
+# Train and evaluate model.
+if __name__ == '__main__':
+  model.fit(x_train, y_train, epochs=10)
+  model.evaluate(x_test, y_test)
 
 # The image classifier is now trained to ~98% accuracy on this dataset.
 
