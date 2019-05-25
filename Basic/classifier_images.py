@@ -144,6 +144,7 @@ def test_step(images, labels):
 
 # training
 def train():
+  """
   for epoch in range(EPOCHS):
     # init all paras
     loss, accuracy, test_loss, test_accuracy = 0., 0., 0., 0.
@@ -158,6 +159,14 @@ def train():
           f"Accuracy: {accuracy.result():.4f}%,"
           f"Test Loss: {test_loss.result() * 100:.6f},"
           f"test Accuracy: {test_accuracy.result():.4f}%.")
+    """
+  model.compile(optimizer=tf.optimizers.Adam(),
+                loss=tf.losses.SparseCategoricalCrossentropy(),
+                metrics=['accuracy'])
+  model.fit(train_images, train_labels, epochs=10)
+  test_loss, test_acc = model.evaluate(test_images, test_labels)
+
+  print('\nTest accuracy:', test_acc)
 
 
 # prediction
@@ -223,6 +232,7 @@ def plot_value_array(i, predictions_array, true_label):
 if __name__ == '__main__':
   train()
   # pred and plot
-  predictions = model.predict(test_images[0])
+  predictions = model.predict(test_images)
+  print(f'Class: {np.argmax(predictions[0])}')
   plot_value_array(0, predictions, test_labels)
   _ = plt.xticks(range(10), class_names, rotation=45)
