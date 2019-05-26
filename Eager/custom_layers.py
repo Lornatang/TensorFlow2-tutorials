@@ -45,21 +45,21 @@ print(layer.kernel, layer.bias)
 
 # Implementing custom layers
 class MyDenseLayer(tf.keras.layers.Layer):
-  def __init__(self, input_shape, num_outputs):
+  def __init__(self, num_outputs):
     super(MyDenseLayer, self).__init__()
-    self.kernel = self.add_variable("kernel",
-                                    shape=[int(input_shape[-1]),
-                                           self.num_outputs])
+
     self.num_outputs = num_outputs
 
   def build(self, input_shape):
-    pass
+    self.kernel = self.add_variable("kernel",
+                                    shape=[int(input_shape[-1]),
+                                           self.num_outputs])
 
   def call(self, inputs, **kwargs):
     return tf.matmul(inputs, self.kernel)
 
 
-layer = MyDenseLayer([-1], 10)
+layer = MyDenseLayer(10)
 print(layer(tf.zeros([10, 5])))
 print(layer.trainable_variables)
 
