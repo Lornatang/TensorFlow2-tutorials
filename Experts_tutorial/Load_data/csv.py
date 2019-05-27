@@ -12,7 +12,10 @@
 # limitations under the License.
 # ==============================================================================
 
-"""This tutorial provides an example of how to load CSV data from a file into a tf.data.Dataset."""
+"""This tutorial provides an example of how to load CSV data from a file
+into a `tf.data.Dataset`.
+"""
+
 
 import numpy as np
 import tensorflow as tf
@@ -25,6 +28,12 @@ test_file_path = tf.keras.utils.get_file("eval.csv", TEST_DATA_URL)
 
 # Make numpy values easier to read.
 np.set_printoptions(precision=3, suppress=True)
+
+"""## Load data
+
+So we know what we're doing, lets look at the top of the CSV file we're working with.
+"""
+
 
 """As you can see, the columns in the CSV are labeled. We need the list later on, so let's read it out of the file."""
 
@@ -44,9 +53,9 @@ If the file you are working with does not contain the column names in the first 
 CSV_COLUMNS = ['survived', 'sex', 'age', 'n_siblings_spouses', 'parch', 'fare', 'class', 'deck', 'embark_town', 'alone']
 
 dataset = tf.data.experimental.make_csv_dataset(
-     ...,
-     column_names=CSV_COLUMNS,
-     ...)
+   ...,
+   column_names=CSV_COLUMNS,
+   ...)
 
 ```
 
@@ -59,9 +68,9 @@ drop_columns = ['fare', 'embark_town']
 columns_to_use = [col for col in CSV_COLUMNS if col not in drop_columns]
 
 dataset = tf.data.experimental.make_csv_dataset(
-  ...,
-  select_columns = columns_to_use, 
-  ...)
+...,
+select_columns = columns_to_use, 
+...)
 
 ```
 
@@ -81,12 +90,12 @@ FEATURE_COLUMNS = [column for column in CSV_COLUMNS if column != LABEL_COLUMN]
 
 def get_dataset(file_path):
   dataset = tf.data.experimental.make_csv_dataset(
-    file_path,
-    batch_size=12,  # Artificially small to make examples easier to show.
-    label_name=LABEL_COLUMN,
-    na_value="?",
-    num_epochs=1,
-    ignore_errors=True)
+      file_path,
+      batch_size=12,  # Artificially small to make examples easier to show.
+      label_name=LABEL_COLUMN,
+      na_value="?",
+      num_epochs=1,
+      ignore_errors=True)
   return dataset
 
 
@@ -196,13 +205,13 @@ Now assemble these preprocessing tasks into a single function that can be mapped
 def preprocess(features, labels):
   # Process categorial features.
   for feature in CATEGORIES.keys():
-    features[feature] = process_categorical_data(features[feature],
-                                                 CATEGORIES[feature])
+      features[feature] = process_categorical_data(features[feature],
+                                                   CATEGORIES[feature])
 
   # Process continuous features.
   for feature in MEANS.keys():
-    features[feature] = process_continuous_data(features[feature],
-                                                MEANS[feature])
+      features[feature] = process_continuous_data(features[feature],
+                                                  MEANS[feature])
 
   # Assemble features into a single tensor.
   features = tf.concat([features[column] for column in FEATURE_COLUMNS], 1)
@@ -218,6 +227,7 @@ test_data = raw_test_data.map(preprocess)
 """And let's see what a single example looks like."""
 
 examples, labels = next(iter(train_data))
+
 
 """The examples are in a  two dimensional arrays of 12 items each (the batch size). Each item represents a single row in the original CSV file. The labels are a 1d tensor of 12 values.
 
@@ -239,12 +249,12 @@ def get_model(input_dim, hidden_units=None):
   """
 
   if hidden_units is None:
-    hidden_units = [100]
+      hidden_units = [100]
   inputs = tf.keras.Input(shape=(input_dim,))
   x = inputs
 
   for units in hidden_units:
-    x = tf.keras.layers.Dense(units, activation='relu')(x)
+      x = tf.keras.layers.Dense(units, activation='relu')(x)
   outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
   model = tf.keras.Model(inputs, outputs)
